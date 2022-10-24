@@ -8,56 +8,81 @@
 using namespace std;
 class StrBlob 
 {
+
 public:
-    typedef vector<string>::size_type size_type;
+    typedef std::vector<std::string>::size_type size_type;
 
-    StrBlob();
-    StrBlob(initializer_list<string> il);
-    size_type size() const {
-        return data->size();
-    }
+    // constructors
+    StrBlob() : data(std::make_shared<std::vector<std::string>>()) { }
+    StrBlob(std::initializer_list<std::string> il);
+
+    // size operations
+    size_type size() const { return data->size(); }
     bool empty() const { return data->empty(); }
-    void push_back(const string& t) {
-       data->push_back(t);
-    }
+
+    // add and remove elements
+    void push_back(const std::string& t) { data->push_back(t); }
     void pop_back();
-    string& front();
-    string& back();
+
+    // element access
+    std::string& front();
+    std::string& back();
+    std::string& front() const;
+    std::string& back() const;
+
 private:
-    shared_ptr<vector<string>> data;
-    void check(size_type i, const string& msg) const;
+    std::shared_ptr<std::vector<std::string>> data;
+    // throws msg if data[i] isn't valid
+    void check(size_type i, const std::string& msg) const;
 };
-StrBlob::StrBlob():data(make_shared<vector<string>>()){}
-StrBlob::StrBlob(initializer_list<string> il):data(make_shared<vector<string>>(il)){}
 
+StrBlob::StrBlob(std::initializer_list<std::string> il) : data(std::make_shared<std::vector<std::string>>(il)) {}
 
-
-
-void StrBlob::check(size_type i, const string& msg) const
-{
-    if (i >= data->size())
-        throw out_of_range(msg);
+void StrBlob::pop_back() {
+    check(0, "pop_back on empty StrBlob");
+    data->pop_back();
 }
 
+void StrBlob::check(size_type i, const std::string& msg)const {
+    if (i >= data->size())
+        throw std::out_of_range(msg);
+}
 
-
-string& StrBlob::back()
-{
+std::string& StrBlob::back() {
     check(0, "back on empty StrBlob");
     return data->back();
-
 }
 
+std::string& StrBlob::front() {
+    check(0, "front on empty StrBlob");
+    return data->front();
+}
+std::string& StrBlob::back() const {
+    check(0, "back on empty StrBlob");
+    return data->back();
+}
 
-void StrBlob::pop_back()
+std::string& StrBlob::front() const {
+    check(0, "front on empty StrBlob");
+    return data->front();
+}
+vector<int>* upr126a(int a)
 {
-    check(0, "pop_back on empty StrBlob");
-
+    return new vector<int> (a);
 }
-
-string& StrBlob::front() 
+void upr126b()
 {
-
-    return *this;
+    vector<int>* stream = nullptr;
+    int c;
+    while (cin >> c)
+    { 
+        if (stream == nullptr) {
+            stream = upr126a(c);
+        }
+        else
+        {
+            stream->push_back(c);
+        }
+    }
+    delete stream;
 }
-
