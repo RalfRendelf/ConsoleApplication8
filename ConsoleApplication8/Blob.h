@@ -23,6 +23,8 @@ public:
     void pop_back();
     string& front();
     string& back();
+    string& front() const;
+    string& back() const;
 private:
     shared_ptr<vector<string>> data;
     void check(size_type i, const string& msg) const;
@@ -41,12 +43,6 @@ void StrBlob::check(size_type i, const string& msg) const
 
 
 
-string& StrBlob::back()
-{
-    check(0, "back on empty StrBlob");
-    return data->back();
-
-}
 
 
 void StrBlob::pop_back()
@@ -57,7 +53,30 @@ void StrBlob::pop_back()
 
 string& StrBlob::front() 
 {
+    check(0, "front on empty StrBlob");
 
-    return *this;
+
+    return data->front();
 }
+
+string& StrBlob::back() {
+    check(0, "back on empty StrBlob");
+    return data->back();
+}
+
+
+
+string& StrBlob::front() const
+{
+    check(0, "front on empty StrBlob");
+
+
+    return data->front();
+}
+
+string& StrBlob::back() const {
+    check(0, "back on empty StrBlob");
+    return data->back();
+}
+
 
