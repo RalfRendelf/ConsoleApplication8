@@ -5,10 +5,10 @@
 #include <vector>
 #include <list>
 
-using namespace std;
-class StrBlob 
-{
 
+using namespace std;
+class StrBlob {
+    friend class StrBlobPtr;
 public:
     typedef std::vector<std::string>::size_type size_type;
 
@@ -23,10 +23,13 @@ public:
     // add and remove elements
     void push_back(const std::string& t) { data->push_back(t); }
     void pop_back();
-    string& front();
-    string& back();
-    string& front() const;
-    string& back() const;
+
+    // element access
+    std::string& front();
+    std::string& back();
+    std::string& front() const;
+    std::string& back() const;
+
 private:
     std::shared_ptr<std::vector<std::string>> data;
     // throws msg if data[i] isn't valid
@@ -45,25 +48,47 @@ void StrBlob::check(size_type i, const std::string& msg)const {
         throw std::out_of_range(msg);
 }
 
-
-
-string& StrBlob::back()
-{
+std::string& StrBlob::back() {
     check(0, "back on empty StrBlob");
     return data->back();
-
 }
 
+std::string& StrBlob::front() {
+    check(0, "front on empty StrBlob");
+    return data->front();
+}
+std::string& StrBlob::back() const {
+    check(0, "back on empty StrBlob");
+    return data->back();
+}
 
-void StrBlob::pop_back()
+std::string& StrBlob::front() const {
+    check(0, "front on empty StrBlob");
+    return data->front();
+}
+class StrBlobPtr
 {
-    check(0, "pop_back on empty StrBlob");
-
-}
-
-string& StrBlob::front() 
+public:
+    StrBlobPtr(): curr(0){}
+    StrBlobPtr(StrBlob& a, size_t sz = 0):wptr(a.data),curr(sz){}
+    string& deref() const;
+    StrBlobPtr& incr();
+private:
+    shared_ptr<vector<string>> check(size_t, const string&) const;
+    weak_ptr<vector<string>> wptr;
+    size_t curr;
+};
+shared_ptr<vector<string>> StrBlobPtr::check(size_t i, const string& msg) const
 {
-
-    return *this;
+    auto ret = wptr.lock();
+    if (!ret)
+        throw runtime_error("unbound StrBlobPtr");
+    if (i >= ret->size())
+        throw out_of_range(msg);
+    return ret;
 }
-
+string& StrBlobPtr::deref() const
+{
+    auto p = check(curr, "deference past end");
+    return (*p)[curr];
+}
