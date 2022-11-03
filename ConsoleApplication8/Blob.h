@@ -23,13 +23,10 @@ public:
     // add and remove elements
     void push_back(const std::string& t) { data->push_back(t); }
     void pop_back();
-
-    // element access
-    std::string& front();
-    std::string& back();
-    std::string& front() const;
-    std::string& back() const;
-
+    string& front();
+    string& back();
+    string& front() const;
+    string& back() const;
 private:
     std::shared_ptr<std::vector<std::string>> data;
     // throws msg if data[i] isn't valid
@@ -48,41 +45,25 @@ void StrBlob::check(size_type i, const std::string& msg)const {
         throw std::out_of_range(msg);
 }
 
-std::string& StrBlob::back() {
+
+
+string& StrBlob::back()
+{
     check(0, "back on empty StrBlob");
     return data->back();
+
 }
 
-std::string& StrBlob::front() {
-    check(0, "front on empty StrBlob");
-    return data->front();
-}
-std::string& StrBlob::back() const {
-    check(0, "back on empty StrBlob");
-    return data->back();
+
+void StrBlob::pop_back()
+{
+    check(0, "pop_back on empty StrBlob");
+
 }
 
-std::string& StrBlob::front() const {
-    check(0, "front on empty StrBlob");
-    return data->front();
-}
-vector<int>* upr126a(int a)
+string& StrBlob::front() 
 {
-    return new vector<int> (a);
+
+    return *this;
 }
-void upr126b()
-{
-    vector<int>* stream = nullptr;
-    int c;
-    while (cin >> c)
-    { 
-        if (stream == nullptr) {
-            stream = upr126a(c);
-        }
-        else
-        {
-            stream->push_back(c);
-        }
-    }
-    delete stream;
-}
+
